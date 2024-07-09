@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Collaborative Editor</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        #editor {
+            width: 130vh;
+            height: 90vh;
+            font-size: 25px;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+        }
+        .container button {
+            padding: 15px 30px;
+            font-size: 18px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+        .container button:hover {
+            background-color: #0056b3;
+        }
+        .input-container {
+            display: none;
+            margin-top: 20px;
+        }
+        .input-container.show {
+            display: block;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 200px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Collaborative Editor</h1>
+    
+        <div id="initialButtons">
+            <button onclick="startServer()">Crear una sala</button>
+            <button onclick="connectClient()">Unirme a una sala</button>
+        </div>
+
+        <div id="credenciales" style="display:none">
+            <input type="text" id="ip" placeholder="IP Servidor">
+            <button onclick="connectToServer()">Enter Editor</button>
+        </div>
+    </div>
+
+    <script>
+        let socket;
+        let isUpdating = false;
+
+        function startServer() {
+            window.location.href = `http://localhost:3000/editor`;
+        }
+
+        function connectClient() {
+            const initialButtons = document.getElementById('initialButtons');
+            initialButtons.style.display = 'none';
+
+            const credenciales = document.getElementById('credenciales');
+            credenciales.style.display = "block";
+        }
+
+        function connectToServer() {
+            const ip = document.getElementById('ip').value.trim(); // Obtener IP ingresado
+            if (!ip) {
+                alert('Por favor ingrese la dirección IP del servidor.');
+                return;
+            }
+            window.location.href = `http://${ip}:3000/editor`;
+        }
+    </script>
+</body>
+</html>

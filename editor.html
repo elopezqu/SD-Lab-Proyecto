@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Collaborative Editor</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        #editor {
+            width: 130vh;
+            height: 90vh;
+            font-size: 25px;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+        }
+        .container button {
+            padding: 15px 30px;
+            font-size: 18px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+        .container button:hover {
+            background-color: #0056b3;
+        }
+        .input-container {
+            display: none;
+            margin-top: 20px;
+        }
+        .input-container.show {
+            display: block;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 200px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Collaborative Editor</h1>
+        <div id="textA">
+            <textarea id="editor"></textarea>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const socket = io();
+
+            let isUpdating = false;
+            const editor = document.getElementById('editor');
+
+            editor.addEventListener('input', () => {
+                if (!isUpdating) {
+                    socket.emit('codeChange', editor.value);
+                }
+            });
+
+            socket.on('codeChange', (data) => {
+                isUpdating = true;
+                editor.value = data;
+                isUpdating = false;
+            });
+            socket.on('initialContent', (data) => {
+                editor.value = data; // Set initial content
+            });
+        });
+    </script>
+</body>
+</html>
