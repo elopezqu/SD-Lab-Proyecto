@@ -7,13 +7,10 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-let currentEditorContent = ''; // Variable para almacenar el contenido actual del editor
-
+let currentEditorContent = ''; 
 app.use(express.static(__dirname + '/public'));
 
-// Ruta para mostrar el editor de texto en el servidor
 app.get('/editor', (req, res) => {
-    // Aquí podrías renderizar una página HTML que contenga el editor de texto
     res.sendFile(__dirname + '/editor.html');
 });
 
@@ -30,8 +27,8 @@ io.on('connection', (socket) => {
     });
 
     socket.on('codeChange', (data) => {
-        currentEditorContent = data; // Actualizar el contenido actual
-        socket.broadcast.emit('codeChange', data); // Broadcast code changes to all clients except sender
+        currentEditorContent = data;
+        socket.broadcast.emit('codeChange', data);     
     });
 });
 
@@ -49,5 +46,5 @@ function getServerIp() {
             }
         }
     }
-    return '127.0.0.1'; // Valor predeterminado si no se puede encontrar una IP válida
+    return '127.0.0.1'; 
 }
